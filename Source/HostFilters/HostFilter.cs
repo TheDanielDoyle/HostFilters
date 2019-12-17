@@ -8,8 +8,16 @@ namespace HostFilters
     {
         Task IHostFilter.Handle(IServiceProvider services, CancellationToken cancellationToken)
         {
-            Handle(services);
+            if (CanHandle(services))
+            {
+                Handle(services);
+            }
             return Task.CompletedTask;
+        }
+
+        protected virtual bool CanHandle(IServiceProvider services)
+        {
+            return true;
         }
 
         protected abstract void Handle(IServiceProvider services);
