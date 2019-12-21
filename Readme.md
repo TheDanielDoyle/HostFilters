@@ -58,7 +58,7 @@ public class Program
 ````csharp
 public class HoldTheBeerHostFilter : HostFilter
 {
-    protected override async Task Handle(IServiceProvider services)
+    protected override void Handle(IServiceProvider services)
     {
         ILogger logger = services.GetService<ILogger<HoldTheBeerHostFilter>>();
         logger.LogInformation("Hold my beer!");
