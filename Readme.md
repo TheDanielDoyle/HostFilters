@@ -15,7 +15,7 @@ Host filters will run before the IHost runs. It's useful for executing migration
 
 You can register host filters using the provided __AddHostFilters()__ method, with its overloads, or use your own Dependency Injection container to match up IHostFilter and concrete types.
 
-__AddHostFilters__ is an extension available for IServiceProvider, which overloads to accomodate each need. See below.
+__AddHostFilters__ is an extension available for IServiceProvider, with overloads to accomodate each need. See below.
 
 ````csharp
 public void ConfigureServices(IServiceCollection services)
