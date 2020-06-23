@@ -10,6 +10,7 @@ namespace HostFilters
 {
     public class HostFilterInvoker : IHostFilterInvoker
     {
+        public const string ExitFlag = "exit";
         private readonly IHost host;
 
         public HostFilterInvoker(IHost host)
@@ -26,8 +27,11 @@ namespace HostFilters
                 {
                     await Handle(filter, scope.ServiceProvider, cancellationToken).ConfigureAwait(false);
                 }
+                if (ShouldRunHost(scope))
+                {
+                    await this.host.RunAsync(cancellationToken).ConfigureAwait(false);
+                }
             }
-            await this.host.RunAsync(cancellationToken).ConfigureAwait(false);
             return host;
         }
 
@@ -41,6 +45,11 @@ namespace HostFilters
             {
                 throw new HostFilterException(exception.Message, exception);
             }
+        }
+
+        private static bool ShouldRunHost(IServiceScope scope)
+        {
+            return !scope.ServiceProvider.GetService<IApplicationArgumentReader>().HasArgument(ExitFlag);
         }
     }
 }

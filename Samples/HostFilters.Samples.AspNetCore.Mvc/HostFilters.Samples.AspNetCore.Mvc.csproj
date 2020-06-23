@@ -8,6 +8,4 @@
     <ProjectReference Include="..\..\Source\HostFilters\HostFilters.csproj" />
   </ItemGroup>
 
-
-
 </Project>
