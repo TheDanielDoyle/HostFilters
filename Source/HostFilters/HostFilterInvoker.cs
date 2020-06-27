@@ -35,11 +35,11 @@ namespace HostFilters
             return host;
         }
 
-        private Task Handle(IHostFilter hostFilter, IServiceProvider services, CancellationToken cancellationToken)
+        private async Task Handle(IHostFilter hostFilter, IServiceProvider services, CancellationToken cancellationToken)
         {
             try
             {
-                return hostFilter.Handle(services, cancellationToken);
+                await hostFilter.Handle(services, cancellationToken);
             }
             catch (Exception exception)
             {
