@@ -16,7 +16,7 @@ namespace HostFilters
         }
 
         protected virtual bool CanHandle(IServiceProvider services, CancellationToken cancellationToken)
-        { 
+        {
             return true;
         }
 

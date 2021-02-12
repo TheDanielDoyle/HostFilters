@@ -22,10 +22,9 @@ namespace HostFilters
         {
             using (IServiceScope scope = host.Services.CreateScope())
             {
-                IEnumerable<IHostFilter> filters = scope.ServiceProvider.GetRequiredService<IEnumerable<IHostFilter>>();
-                foreach (IHostFilter filter in filters.ToList())
+                foreach (IHostFilter hostFilter in CreateHostFilters(scope).ToList())
                 {
-                    await Handle(filter, scope.ServiceProvider, cancellationToken).ConfigureAwait(false);
+                    await Handle(hostFilter, scope.ServiceProvider, cancellationToken).ConfigureAwait(false);
                 }
                 if (ShouldRunHost(scope))
                 {
@@ -33,6 +32,18 @@ namespace HostFilters
                 }
             }
             return host;
+        }
+
+        private IEnumerable<IHostFilter> CreateHostFilters(IServiceScope scope)
+        {
+            try
+            {
+                return scope.ServiceProvider.GetRequiredService<IEnumerable<IHostFilter>>();
+            }
+            catch (InvalidOperationException exception)
+            {
+               throw new HostFilterException("Unable to create Host Filters. Please ensure you have registred all dependencies correctly.", exception);
+            }
         }
 
         private async Task Handle(IHostFilter hostFilter, IServiceProvider services, CancellationToken cancellationToken)
@@ -47,9 +58,12 @@ namespace HostFilters
             }
         }
 
-        private static bool ShouldRunHost(IServiceScope scope)
+        private bool ShouldRunHost(IServiceScope scope)
         {
-            return !scope.ServiceProvider.GetService<IApplicationArgumentReader>().HasArgument(ExitFlag);
+            IApplicationArgumentReader argumentReader =
+                scope.ServiceProvider.GetService<IApplicationArgumentReader>()
+                ?? new CommandlineApplicationArgumentReader();
+            return !argumentReader.HasArgument(ExitFlag);
         }
     }
 }
