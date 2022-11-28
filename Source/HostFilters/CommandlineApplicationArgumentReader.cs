@@ -7,7 +7,7 @@ namespace HostFilters
     {
         public bool HasArgument(string argument)
         {
-            return Environment.GetCommandLineArgs().ToList().Contains(argument);
+            return Environment.GetCommandLineArgs().Contains(argument);
         }
     }
 }
